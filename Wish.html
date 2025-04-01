@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smile Please</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;700&family=Montserrat:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Classic Elegant Styling */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        font-family: "Playfair Display", serif;
+        background-color: #f9f3f0;
+        color: #5a4a42;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        perspective: 1200px;
+        background: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+      }
+
+      /* Book container */
+      .book-container {
+        position: relative;
+        width: 95%;
+        height: 95vh;
+        max-width: 900px;
+        max-height: 650px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Vintage Book Design */
+      .book {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 1s;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), inset 0 0 0 15px #d4b8a7,
+          inset 0 0 0 20px #f0e0d6;
+        border-radius: 5px;
+        background: #fff9f6;
+        overflow: hidden;
+      }
+
+      /* Page styling */
+      .page {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: #fff9f6;
+        padding: 40px;
+        backface-visibility: hidden;
+        transform-origin: left center;
+        transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        opacity: 0;
+        pointer-events: none;
+        background-image: url("https://www.transparenttextures.com/patterns/rice-paper.png");
+      }
+
+      .page.active {
+        opacity: 1;
+        pointer-events: all;
+        z-index: 10;
+      }
+
+      .page-content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        overflow-y: auto;
+        padding: 10px 0;
+      }
+
+      /* Cover page */
+      .cover {
+        background: linear-gradient(135deg, #e8cbc0 0%, #c9a798 100%);
+        color: #5a4a42;
+        z-index: 10;
+        padding: 0;
+      }
+
+      .cover-image-container {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .cover-image {
+        width: auto;
+        height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        position: relative;
+        opacity: 0.9;
+      }
+
+      .cover-content {
+        position: relative;
+        z-index: 2;
+        padding: 30px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 249, 246, 0.7);
+      }
+
+      .title {
+        font-family: "Dancing Script", cursive;
+        font-size: 3.5rem;
+        margin-bottom: 15px;
+        color: #5a4a42;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        letter-spacing: 2px;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        max-width: 80%;
+        line-height: 1.6;
+        font-weight: 300;
+        color: #5a4a42;
+        font-style: italic;
+      }
+
+      /* Poetry page */
+      .poetry {
+        font-family: "Dancing Script", cursive;
+        font-size: 1.8rem;
+        line-height: 1.8;
+        margin: 20px 0;
+        color: #8c6a56;
+        position: relative;
+        padding: 0 30px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .poetry::before,
+      .poetry::after {
+        content: '"';
+        font-size: 4rem;
+        color: rgba(140, 106, 86, 0.2);
+        position: absolute;
+      }
+
+      .poetry::before {
+        top: -30px;
+        left: -10px;
+      }
+
+      .poetry::after {
+        bottom: -50px;
+        right: -10px;
+      }
+
+      /* Memory pages */
+      .memory-page {
+        background-size: cover;
+        background-position: center;
+      }
+
+      .memory-title {
+        font-family: "Dancing Script", cursive;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: #8c6a56;
+      }
+
+      .memory-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        max-width: 80%;
+        margin-bottom: 20px;
+        background: rgba(255, 249, 246, 0.9);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border-left: 3px solid #d4b8a7;
+      }
+
+      .memory-icon {
+        font-size: 3rem;
+        margin: 20px 0;
+        animation: float 4s ease-in-out infinite;
+        color: #8c6a56;
+      }
+
+      /* Question page */
+      .question-page {
+        background: #fff9f6;
+      }
+
+      .question-number {
+        font-size: 0.9rem;
+        color: #8c6a56;
+        margin-bottom: 10px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        font-style: italic;
+      }
+
+      .question-text {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        color: #5a4a42;
+        font-weight: 500;
+        line-height: 1.4;
+        max-width: 90%;
+        font-family: "Playfair Display", serif;
+      }
+
+      .options-container {
+        width: 100%;
+        max-width: 550px;
+        position: relative;
+        min-height: 300px;
+      }
+
+      .option {
+        padding: 15px;
+        margin: 15px 0;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #d4b8a7;
+        position: absolute;
+        width: 100%;
+        overflow: hidden;
+        font-size: 1.1rem;
+        font-weight: 400;
+        left: 0;
+        opacity: 1;
+        font-family: "Playfair Display", serif;
+      }
+
+      .option:hover:not(.correct-answer) {
+        transform: translateX(100vw) rotate(20deg);
+        opacity: 0;
+      }
+
+      .correct-answer {
+        background: rgba(255, 249, 246, 0.9);
+        color: #5a4a42;
+        border: 1px solid #8c6a56;
+        cursor: pointer;
+        z-index: 2;
+        box-shadow: 0 5px 15px rgba(140, 106, 86, 0.2);
+      }
+
+      /* Navigation buttons */
+      .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 300px;
+        margin-top: 30px;
+      }
+
+      .nav-button {
+        padding: 12px 30px;
+        background: #8c6a56;
+        border: none;
+        border-radius: 3px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+        font-weight: 400;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        font-family: "Playfair Display", serif;
+      }
+
+      .nav-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        background: #5a4a42;
+      }
+
+      .nav-button:disabled {
+        background: #d4b8a7;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      /* Hearts animation */
+      .hearts {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+      }
+
+      .heart {
+        position: absolute;
+        font-size: 20px;
+        color: #e8cbc0;
+        opacity: 0;
+        animation: float 8s linear infinite;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.7;
+        }
+        90% {
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateY(-100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Final page */
+      .final-page {
+        background: linear-gradient(135deg, #e8cbc0 0%, #c9a798 100%);
+        color: #5a4a42;
+      }
+
+      .final-message {
+        font-family: "Dancing Script", cursive;
+        font-size: 3rem;
+        margin-bottom: 30px;
+        color: #5a4a42;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .memory-list {
+        text-align: center;
+        max-width: 80%;
+        margin: 0 auto 30px;
+      }
+
+      .memory-item {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin: 10px 0;
+        position: relative;
+        font-style: italic;
+        color: #5a4a42;
+      }
+
+      /* White analogies */
+      .white-analogy {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        max-width: 80%;
+        border-left: 3px solid #d4b8a7;
+      }
+
+      .white-icon {
+        font-size: 2rem;
+        margin-right: 15px;
+        color: #8c6a56;
+      }
+
+      .white-text {
+        text-align: left;
+        font-size: 1rem;
+        font-family: "Playfair Display", serif;
+      }
+
+      /* Apology section */
+      .apology-section {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 5px;
+        margin: 20px 0;
+        max-width: 80%;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border-top: 3px solid #d4b8a7;
+        border-bottom: 3px solid #d4b8a7;
+      }
+
+      .apology-title {
+        font-family: "Dancing Script", cursive;
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: #8c6a56;
+      }
+
+      .apology-text {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+
+      /* Photo frame */
+      .photo-frame {
+        width: 220px;
+        height: 220px;
+        border: 12px solid #f0e0d6;
+        border-radius: 5px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin: 15px auto;
+        overflow: hidden;
+        position: relative;
+        background: #fff;
+      }
+
+      .photo-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      /* Celebration animation */
+      .celebration {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.5s;
+      }
+
+      .celebration.active {
+        opacity: 1;
+      }
+
+      .celebration-text {
+        font-family: "Dancing Script", cursive;
+        font-size: 4rem;
+        color: #8c6a56;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        animation: zoomInOut 2s;
+      }
+
+      @keyframes zoomInOut {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0;
+        }
+      }
+
+      .ink-flourish {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%238c6a56" d="M30,10 Q50,5 70,20 Q90,40 80,60 Q70,80 50,85 Q30,90 20,70 Q10,50 30,10" opacity="0.1"/></svg>');
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: fadeInOut 8s infinite;
+        z-index: 0;
+      }
+
+      @keyframes fadeInOut {
+        0%,
+        100% {
+          opacity: 0.1;
+          transform: scale(0.8);
+        }
+        50% {
+          opacity: 0.3;
+          transform: scale(1);
+        }
+      }
+
+      .love-letter {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23e8cbc0" d="M20,20 L80,20 L80,80 L20,80 Z M30,30 L70,30 L70,50 L30,50 Z M30,60 L50,60 L50,70 L30,70 Z" opacity="0.8"/></svg>');
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: floatLetter 10s infinite ease-in-out;
+        z-index: 0;
+      }
+
+      @keyframes floatLetter {
+        0%,
+        100% {
+          transform: translateY(0) rotate(-5deg);
+        }
+        50% {
+          transform: translateY(-15px) rotate(5deg);
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .book-container {
+          height: 90vh;
+        }
+
+        .page {
+          padding: 30px;
+        }
+
+        .title {
+          font-size: 3rem;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+        }
+
+        .poetry {
+          font-size: 1.5rem;
+        }
+
+        .memory-title {
+          font-size: 2rem;
+        }
+
+        .memory-content {
+          font-size: 1rem;
+        }
+
+        .question-text {
+          font-size: 1.3rem;
+        }
+
+        .option {
+          padding: 12px;
+          font-size: 1rem;
+        }
+
+        .final-message {
+          font-size: 2.5rem;
+        }
+
+        .photo-frame {
+          width: 180px;
+          height: 180px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .book-container {
+          height: 85vh;
+          width: 98%;
+        }
+
+        .page {
+          padding: 20px;
+        }
+
+        .title {
+          font-size: 2.5rem;
+        }
+
+        .subtitle {
+          font-size: 0.9rem;
+        }
+
+        .poetry {
+          font-size: 1.2rem;
+          padding: 0 15px;
+        }
+
+        .memory-title {
+          font-size: 1.8rem;
+        }
+
+        .memory-content,
+        .white-text {
+          font-size: 0.9rem;
+          max-width: 90%;
+        }
+
+        .question-text {
+          font-size: 1.1rem;
+        }
+
+        .option {
+          padding: 10px;
+          font-size: 0.9rem;
+        }
+
+        .nav-button {
+          padding: 10px 20px;
+          font-size: 0.8rem;
+        }
+
+        .final-message {
+          font-size: 2rem;
+        }
+
+        .memory-item {
+          font-size: 1rem;
+        }
+
+        .photo-frame {
+          width: 150px;
+          height: 150px;
+          border-width: 8px;
+        }
+
+        .white-icon {
+          font-size: 1.5rem;
+        }
+
+        .ink-flourish {
+          width: 100px;
+          height: 100px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="book-container">
+      <div class="book" id="book">
+        <div class="page cover active" id="cover">
+          <div class="cover-image-container">
+            <div class="photo-frame">
+              <img
+                class="cover-image"
+                src="image.jpg"
+                alt="Her beautiful photo"
+              />
+            </div>
+          </div>
+          <div class="cover-content">
+            <h1 class="title">Celebrating Sibangi</h1>
+            <p class="subtitle">A collection of perfect!</p>
+            <button class="nav-button" id="startButton">Open Letter</button>
+          </div>
+          <div class="hearts" id="coverHearts"></div>
+          <div class="ink-flourish" style="top: 10%; left: 5%"></div>
+          <div
+            class="ink-flourish"
+            style="bottom: 10%; right: 5%; transform: rotate(180deg)"
+          ></div>
+          <div class="love-letter" style="top: 20%; right: 10%"></div>
+          <div
+            class="love-letter"
+            style="bottom: 20%; left: 10%; transform: scale(0.8)"
+          ></div>
+        </div>
+
+        <div class="page" id="page1">
+          <div class="page-content">
+            <div class="poetry">
+              <p>Like the morning sun that paints the sky in gold,</p>
+              <p>Your radiance brightens darkest days.</p>
+              <p>Like the ocean's depth, mysterious and bold,</p>
+              <p>Your soul in countless beautiful ways.</p>
+              <p>Like the rarest rose in a moonlit garden,</p>
+              <p>Your beauty takes breath away.</p>
+              <p>Like the sweetest melody ever written,</p>
+              <p>Your voice in heart will always stay.</p>
+            </div>
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button class="nav-button" onclick="nextPage()">Next</button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="top: 15%; right: 10%"></div>
+        </div>
+
+        <!-- White Analogies Page -->
+        <div class="page" id="page2">
+          <div class="page-content">
+            <h2 class="memory-title">You're Pure as White</h2>
+
+            <div class="white-analogy">
+              <div class="white-icon">☁️</div>
+              <div class="white-text">
+                Like clouds - soft, gentle, and ever-changing in your beauty,
+                yet always perfect in every form
+              </div>
+            </div>
+
+            <div class="white-analogy">
+              <div class="white-icon">🥛</div>
+              <div class="white-text">
+                Like milk - pure, nourishing, and essential to my happiness, the
+                foundation of so many sweet moments
+              </div>
+            </div>
+
+            <div class="white-analogy">
+              <div class="white-icon">🌼</div>
+              <div class="white-text">
+                Like white roses - delicate, graceful, and breathtakingly
+                beautiful with an intoxicating presence
+              </div>
+            </div>
+
+            <div class="white-analogy">
+              <div class="white-icon">📜</div>
+              <div class="white-text">
+                Like fresh paper - ready to write our story together, blank
+                pages waiting to be filled with shared memories
+              </div>
+            </div>
+
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button class="nav-button" onclick="nextPage()">Next</button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="bottom: 15%; left: 10%"></div>
+        </div>
+
+        <div
+          class="page memory-page"
+          id="memory1"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+          "
+        >
+          <div class="page-content">
+            <div class="memory-icon">🍗</div>
+            <h2 class="memory-title">Midterm Chicken Magic</h2>
+            <div class="memory-content">
+              I'll never forget how you came home exhausted after your midterm
+              exams, and still managed to cook the most amazing chicken. Even
+              when tired, you create magic in the kitchen - just like you create
+              magic in life every day.
+            </div>
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button class="nav-button" onclick="nextPage()">Next</button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="top: 20%; right: 15%"></div>
+        </div>
+
+        <div
+          class="page memory-page"
+          id="memory2"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+          "
+        >
+          <div class="page-content">
+            <div class="memory-icon">😊</div>
+            <h2 class="memory-title">Your Radiant Smile</h2>
+            <div class="memory-content">
+              There's this particular smile of yours that could light up the
+              darkest night. It starts in your eyes first, then spreads to your
+              lips like sunrise over the horizon. I find myself doing silly
+              things just to see that smile appear. It's my favorite sight, more
+              beautiful than any sunset, more precious than any treasure. Your
+              smile is the happy place.
+            </div>
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button class="nav-button" onclick="nextPage()">Next</button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="bottom: 20%; left: 10%"></div>
+        </div>
+
+        <div
+          class="page memory-page"
+          id="memory3"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1517842645767-c639042777db?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+          "
+        >
+          <div class="page-content">
+            <div class="memory-icon">💪</div>
+            <h2 class="memory-title">Your Quiet Strength</h2>
+            <div class="memory-content">
+              I've watched you face challenges with such grace and
+              determination. The way you handle difficult situations with both
+              strength and kindness amazes me. You're like bamboo - flexible
+              enough to bend with the wind but unbreakable at your core. Your
+              resilience inspires me to be better every day. Even when you doubt
+              yourself, I see how incredibly capable you are.
+            </div>
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button class="nav-button" onclick="nextPage()">Next</button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="top: 20%; right: 15%"></div>
+        </div>
+
+        <div class="page question-page" id="question1">
+          <div class="page-content">
+            <div class="question-number">Question 1 of 5</div>
+            <div class="question-text">
+              Who has the most captivating eyes we've ever seen?
+            </div>
+            <div class="options-container">
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 0px"
+              >
+                The deepest ocean
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 80px"
+              >
+                The night sky full of stars
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 160px"
+              >
+                The rarest gemstones
+              </div>
+              <div
+                class="option correct-answer"
+                onclick="checkAnswer(this, 0)"
+                style="top: 240px"
+              >
+                You, with your mesmerizing gaze
+              </div>
+            </div>
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button
+                class="nav-button next-question"
+                onclick="nextPage()"
+                disabled
+              >
+                Next
+              </button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="bottom: 20%; left: 10%"></div>
+        </div>
+
+        <div class="page question-page" id="question2">
+          <div class="page-content">
+            <div class="question-number">Question 2 of 5</div>
+            <div class="question-text">
+              Whose smile brightens the day more than anything else?
+            </div>
+            <div class="options-container">
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 0px"
+              >
+                A sunny morning
+              </div>
+              <div
+                class="option correct-answer"
+                onclick="checkAnswer(this, 0)"
+                style="top: 80px"
+              >
+                Your beautiful, radiant smile
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 160px"
+              >
+                A field of blooming flowers
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 240px"
+              >
+                The golden hour sunset
+              </div>
+            </div>
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button
+                class="nav-button next-question"
+                onclick="nextPage()"
+                disabled
+              >
+                Next
+              </button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="top: 20%; right: 15%"></div>
+        </div>
+
+        <div class="page question-page" id="question3">
+          <div class="page-content">
+            <div class="question-number">Question 3 of 5</div>
+            <div class="question-text">
+              Who moves with more grace than a ballet dancer?
+            </div>
+            <div class="options-container">
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 0px"
+              >
+                A swan gliding on water
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 80px"
+              >
+                Autumn leaves in the wind
+              </div>
+              <div
+                class="option correct-answer"
+                onclick="checkAnswer(this, 0)"
+                style="top: 160px"
+              >
+                You, with your effortless elegance
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 240px"
+              >
+                A professional ballerina
+              </div>
+            </div>
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button
+                class="nav-button next-question"
+                onclick="nextPage()"
+                disabled
+              >
+                Next
+              </button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="bottom: 20%; left: 10%"></div>
+        </div>
+
+        <div class="page question-page" id="question4">
+          <div class="page-content">
+            <div class="question-number">Question 4 of 5</div>
+            <div class="question-text">
+              Whose voice is more melodious than favorite song?
+            </div>
+            <div class="options-container">
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 0px"
+              >
+                A nightingale's sweet tune
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 80px"
+              >
+                A gentle mountain stream
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 160px"
+              >
+                A symphony orchestra
+              </div>
+              <div
+                class="option correct-answer"
+                onclick="checkAnswer(this, 0)"
+                style="top: 240px"
+              >
+                Your voice, which comforts soul
+              </div>
+            </div>
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button
+                class="nav-button next-question"
+                onclick="nextPage()"
+                disabled
+              >
+                Next
+              </button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="top: 20%; right: 15%"></div>
+        </div>
+
+        <div class="page question-page" id="question5">
+          <div class="page-content">
+            <div class="question-number">Question 5 of 5</div>
+            <div class="question-text">
+              Who makes every moment feel magical just by being there?
+            </div>
+            <div class="options-container">
+              <div
+                class="option correct-answer"
+                onclick="checkAnswer(this, 0)"
+                style="top: 0px"
+              >
+                your beautiful enchantress
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 80px"
+              >
+                A starry night sky
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 160px"
+              >
+                A perfect sunset
+              </div>
+              <div
+                class="option incorrect"
+                data-correct="false"
+                style="top: 240px"
+              >
+                The northern lights
+              </div>
+            </div>
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button
+                class="nav-button next-question"
+                onclick="nextPage()"
+                disabled
+              >
+                See Results
+              </button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="bottom: 20%; left: 10%"></div>
+        </div>
+
+        <!-- Final Page -->
+        <div class="page final-page" id="finalPage">
+          <div class="page-content">
+            <div class="final-message">Smile Belongs To You</div>
+
+            <div class="memory-list">
+              <div class="memory-item">For your eyes that hold universes</div>
+              <div class="memory-item">For your smile that lights up world</div>
+              <div class="memory-item">
+                For your grace that takes breath away
+              </div>
+              <div class="memory-item">For your voice that soothes soul</div>
+              <div class="memory-item">For your magical presence in life</div>
+            </div>
+
+            <div class="memory-content">
+              Every moment with you becomes a cherished memory, you are greatest
+              blessing. Thank you for being exactly who you are.
+            </div>
+
+            <div class="apology-section">
+              <h3 class="apology-title">With All My Heart</h3>
+              <p class="apology-text">
+                I'm endlessly sorry for any moment I've failed to show you how
+                truly special you are. You deserve the world and more.
+              </p>
+              <p class="apology-text">
+                Thank you for your patience, your kindness, and your beautiful
+                heart. Please never stop smiling - it's our favorite sight in
+                this world.
+              </p>
+            </div>
+
+            <div class="nav-buttons">
+              <button class="nav-button" onclick="prevPage()">Back</button>
+              <button class="nav-button" onclick="restartBook()">
+                Read Again
+              </button>
+            </div>
+          </div>
+          <div class="hearts"></div>
+          <div class="ink-flourish" style="top: 15%; left: 10%"></div>
+          <div
+            class="ink-flourish"
+            style="bottom: 15%; right: 10%; transform: rotate(180deg)"
+          ></div>
+          <div class="love-letter" style="top: 25%; right: 15%"></div>
+          <div
+            class="love-letter"
+            style="bottom: 25%; left: 15%; transform: scale(0.8)"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="celebration" id="celebration">
+      <div class="celebration-text">Perfect!</div>
+    </div>
+
+    <script>
+      // Current page tracking
+      let currentPageIndex = 0;
+      const pages = [
+        "cover",
+        "page1",
+        "page2",
+        "memory1",
+        "memory2",
+        "memory3",
+        "question1",
+        "question2",
+        "question3",
+        "question4",
+        "question5",
+        "finalPage",
+      ];
+
+      // Initialize the book
+      function initBook() {
+        // Set up event listeners
+        document
+          .getElementById("startButton")
+          .addEventListener("click", nextPage);
+
+        // Create floating hearts
+        createHearts();
+
+        // Make incorrect options move on hover
+        document.querySelectorAll(".option.incorrect").forEach((option) => {
+          option.addEventListener("mouseover", function () {
+            if (!this.classList.contains("moved")) {
+              const x = Math.random() * 500 + 300;
+              const y = Math.random() * 200 - 100;
+              this.style.transform = `translateX(${x}px) rotate(${
+                Math.random() * 60 - 30
+              }deg)`;
+              this.style.opacity = "0";
+              this.classList.add("moved");
+
+              // Reset after animation
+              setTimeout(() => {
+                this.style.transform = "";
+                this.style.opacity = "1";
+                this.classList.remove("moved");
+              }, 1000);
+            }
+          });
+        });
+      }
+
+      // Create floating hearts
+      function createHearts() {
+        const heartsContainers = document.querySelectorAll(".hearts");
+
+        heartsContainers.forEach((container) => {
+          for (let i = 0; i < 25; i++) {
+            const heart = document.createElement("div");
+            heart.className = "heart";
+            heart.innerHTML = "❤️";
+            heart.style.left = `${Math.random() * 100}%`;
+            heart.style.top = `${Math.random() * 100 + 100}%`;
+            heart.style.fontSize = `${Math.random() * 25 + 20}px`;
+            heart.style.animationDuration = `${Math.random() * 6 + 4}s`;
+            heart.style.animationDelay = `${Math.random() * 3}s`;
+            container.appendChild(heart);
+          }
+        });
+      }
+
+      // Check answer for questions
+      function checkAnswer(option, isCorrect) {
+        const options = option.parentElement.querySelectorAll(".option");
+        const nextButton = option
+          .closest(".page-content")
+          .querySelector(".next-question");
+
+        // Disable all options
+        options.forEach((opt) => {
+          opt.style.pointerEvents = "none";
+        });
+
+        // Mark selected option
+        if (isCorrect === 0) {
+          createCelebrationAnimation(option);
+
+          // Show celebration text
+          const celebration = document.getElementById("celebration");
+          celebration.classList.add("active");
+          setTimeout(() => {
+            celebration.classList.remove("active");
+          }, 2000);
+        }
+
+        // Enable next button
+        nextButton.disabled = false;
+      }
+
+      // Create celebration animation when correct answer is selected
+      function createCelebrationAnimation(element) {
+        const rect = element.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+
+        // Create floating hearts
+        for (let i = 0; i < 15; i++) {
+          const heart = document.createElement("div");
+          heart.className = "heart";
+          heart.innerHTML = "❤️";
+          heart.style.position = "fixed";
+          heart.style.left = `${x}px`;
+          heart.style.top = `${y}px`;
+          heart.style.fontSize = `${Math.random() * 30 + 20}px`;
+          heart.style.animationDuration = "2s";
+          heart.style.zIndex = "1000";
+          document.body.appendChild(heart);
+
+          // Remove heart after animation
+          setTimeout(() => {
+            heart.remove();
+          }, 2000);
+        }
+
+        for (let i = 0; i < 5; i++) {
+          const letter = document.createElement("div");
+          letter.className = "love-letter";
+          letter.style.position = "fixed";
+          letter.style.left = `${x}px`;
+          letter.style.top = `${y}px`;
+          letter.style.width = "50px";
+          letter.style.height = "50px";
+          letter.style.animation = "floatLetter 3s ease-in-out";
+          letter.style.zIndex = "1000";
+          document.body.appendChild(letter);
+
+          // Remove letter after animation
+          setTimeout(() => {
+            letter.remove();
+          }, 3000);
+        }
+      }
+
+      // Navigate to next page
+      function nextPage() {
+        if (currentPageIndex < pages.length - 1) {
+          // Turn page animation
+          const currentPage = document.getElementById(pages[currentPageIndex]);
+          currentPage.classList.remove("active");
+
+          currentPageIndex++;
+
+          const nextPage = document.getElementById(pages[currentPageIndex]);
+          nextPage.classList.add("active");
+
+          // Reset scroll position
+          nextPage.scrollTop = 0;
+        }
+      }
+
+      // Navigate to previous page
+      function prevPage() {
+        if (currentPageIndex > 0) {
+          const currentPage = document.getElementById(pages[currentPageIndex]);
+          currentPage.classList.remove("active");
+
+          currentPageIndex--;
+
+          const prevPage = document.getElementById(pages[currentPageIndex]);
+          prevPage.classList.add("active");
+
+          // Reset scroll position
+          prevPage.scrollTop = 0;
+        }
+      }
+
+      // Restart the book
+      function restartBook() {
+        // Turn all pages back
+        pages.forEach((page) => {
+          const pageEl = document.getElementById(page);
+          if (pageEl) {
+            pageEl.classList.remove("active");
+          }
+        });
+
+        // Reset to cover
+        currentPageIndex = 0;
+        document.getElementById("cover").classList.add("active");
+
+        // Reset all questions
+        document.querySelectorAll(".option").forEach((option) => {
+          option.classList.remove("moved");
+          option.style.pointerEvents = "auto";
+          option.style.transform = "";
+          option.style.opacity = "1";
+        });
+
+        document.querySelectorAll(".next-question").forEach((button) => {
+          button.disabled = true;
+        });
+      }
+
+      window.addEventListener("load", initBook);
+    </script>
+  </body>
+</html>
